@@ -1,24 +1,32 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useState, useEffect } from "react";
+
+import "./App.css";
+import Header from "./components/Header";
 
 function App() {
+  const [results, setResults] = useState([]);
+  useEffect(() => {
+    fetch("https://randomuser.me/api/?results=5")
+      .then(res => res.json())
+      .then(data => {
+        console.log(data);
+        setResults(data.results);
+      });
+  }, []);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      {results.map((result, index) => {
+        return (
+          <Header
+            key={index}
+            avatarUrl={result.picture.large}
+            city={result.location.city}
+            email={result.email}
+            age={result.dob.age}
+          />
+        );
+      })}
     </div>
   );
 }
